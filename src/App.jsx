@@ -1226,7 +1226,7 @@ export default function App() {
     sessionStorage.setItem('pendingSubscriptionId', subId);
     setAuthMode('register-paid');
   };
-
+// Beta deploy checkpoint
   return (
     <ClerkProvider publishableKey={clerkPubKey}>
       <SignedOut>
