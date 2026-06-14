@@ -34,7 +34,7 @@ function PayPalButton({ onSuccess }) {
 }
 
 // ─── Main Landing Page ────────────────────────────────────────────────────────
-export default function LandingPage({ onPaymentSuccess, onLoginClick, onTrialStart }) {
+export default function LandingPage({ onPaymentSuccess, onLoginClick, onTrialClick }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -104,17 +104,13 @@ export default function LandingPage({ onPaymentSuccess, onLoginClick, onTrialSta
             A structured, distraction-free reading tool designed for teachers and parents supporting learners with attention difficulties. Simple to use. Immediately effective.
           </p>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-            {/* ── FREE TRIAL CTA (primary) ── */}
-            <button onClick={onTrialStart} style={{ padding: '1rem 2.5rem', background: 'linear-gradient(135deg, #667eea, #764ba2)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '1.05rem', fontFamily: 'inherit', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 8px 30px rgba(102,126,234,0.4)' }}>
-              Try Free for 14 Days <ArrowRight size={18} />
+            <button onClick={onTrialClick} style={{ padding: '1rem 2.5rem', background: 'linear-gradient(135deg, #667eea, #764ba2)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '1.05rem', fontFamily: 'inherit', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '0.5rem', boxShadow: '0 8px 30px rgba(102,126,234,0.4)' }}>
+              🎉 Start Free 7-Day Trial <ArrowRight size={18} />
             </button>
-            <button onClick={() => scrollTo('features')} style={{ padding: '1rem 2.5rem', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', cursor: 'pointer', fontSize: '1.05rem', fontFamily: 'inherit' }}>
-              See How It Works
+            <button onClick={() => scrollTo('pricing')} style={{ padding: '1rem 2.5rem', background: 'rgba(255,255,255,0.1)', color: 'white', border: '1px solid rgba(255,255,255,0.2)', borderRadius: '8px', cursor: 'pointer', fontSize: '1.05rem', fontFamily: 'inherit' }}>
+              See Pricing
             </button>
           </div>
-          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', marginTop: '1rem', fontFamily: 'sans-serif' }}>
-            No credit card required · Cancel any time
-          </p>
           <button onClick={() => scrollTo('about')} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.4)', marginTop: '4rem', display: 'flex', alignItems: 'center', flexDirection: 'column', gap: '0.3rem', margin: '4rem auto 0', fontSize: '0.85rem', fontFamily: 'inherit' }}>
             <span>Learn more</span>
             <ChevronDown size={20} style={{ animation: 'bounce 2s infinite' }} />
@@ -229,22 +225,16 @@ export default function LandingPage({ onPaymentSuccess, onLoginClick, onTrialSta
               ))}
             </div>
 
-            {/* ── FREE TRIAL button ── */}
-            <button onClick={onTrialStart} style={{ width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #667eea, #764ba2)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '1.05rem', fontFamily: 'inherit', fontWeight: 'bold', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', boxShadow: '0 4px 20px rgba(102,126,234,0.35)', marginBottom: '0.75rem' }}>
-              Start Free 14-Day Trial <ArrowRight size={18} />
+            <button onClick={onTrialClick} style={{ width: '100%', padding: '1rem', background: 'linear-gradient(135deg, #667eea, #764ba2)', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontSize: '1.05rem', fontFamily: 'inherit', fontWeight: 'bold', marginBottom: '1rem', boxShadow: '0 4px 15px rgba(102,126,234,0.4)' }}>
+              🎉 Start Free 7-Day Trial — No Card Needed
             </button>
-            <p style={{ color: '#aaa', fontSize: '0.8rem', margin: '0 0 1.5rem', fontFamily: 'sans-serif' }}>
-              No credit card required. Full access for 14 days.
-            </p>
 
-            {/* ── Divider ── */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', margin: '1rem 0' }}>
               <div style={{ flex: 1, height: '1px', background: '#eee' }} />
-              <span style={{ color: '#aaa', fontSize: '0.8rem', fontFamily: 'sans-serif', whiteSpace: 'nowrap' }}>or subscribe now</span>
+              <span style={{ color: '#aaa', fontSize: '0.85rem', fontFamily: 'sans-serif' }}>or subscribe now</span>
               <div style={{ flex: 1, height: '1px', background: '#eee' }} />
             </div>
 
-            {/* ── PayPal (for direct subscribers) ── */}
             <PayPalButton onSuccess={onPaymentSuccess} />
 
             <p style={{ color: '#aaa', fontSize: '0.8rem', marginTop: '1rem', fontFamily: 'sans-serif' }}>
