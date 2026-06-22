@@ -137,6 +137,9 @@ const loadSessions = () => {
   const [currentTextId,    setCurrentTextId]    = useState(1);
   const [showTextMenu,     setShowTextMenu]      = useState(false);
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
+  const [selectedAgeBand, setSelectedAgeBand] = useState("All");
+const [selectedCategory, setSelectedCategory] = useState("All");
+const [searchTerm, setSearchTerm] = useState("");
   const [showAddText,      setShowAddText]       = useState(false);
   const [newTextTitle,     setNewTextTitle]      = useState('');
   const [newTextContent,   setNewTextContent]    = useState('');
@@ -169,10 +172,54 @@ const loadSessions = () => {
 
   const currentText = texts.find((t) => t.id === currentTextId)?.content || '';
   const words = currentText.split(' ').filter((w) => w.length > 0);
-  const filteredTexts =
-  selectedDifficulty === "All"
-    ? texts
-    : texts.filter((text) => text.difficulty === selectedDifficulty);
+
+ const getLibraryAgeGroup = (ageBand) => {
+  switch (ageBand) {
+    case "8-10":
+      return "8-10";
+
+    case "9-11":
+    case "10-12":
+    case "11-13":
+      return "11-13";
+
+    case "14-17":
+      return "14-17";
+
+    default:
+      return ageBand;
+  }
+};
+
+  const ageBands = [
+  "All",
+  ...new Set(
+    texts
+      .map((text) => getLibraryAgeGroup(text.ageBand))
+      .filter(Boolean)
+  )
+];
+
+const categories = ["All", ...new Set(texts.map((text) => text.category).filter(Boolean))];
+
+const filteredTexts = texts.filter((text) => {
+  const matchesAge =
+  selectedAgeBand === "All" ||
+  getLibraryAgeGroup(text.ageBand) === selectedAgeBand;
+
+  const matchesDifficulty =
+    selectedDifficulty === "All" || text.difficulty === selectedDifficulty;
+
+  const matchesCategory =
+    selectedCategory === "All" || text.category === selectedCategory;
+
+  const matchesSearch =
+    searchTerm.trim() === "" ||
+    text.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    text.category?.toLowerCase().includes(searchTerm.toLowerCase());
+
+  return matchesAge && matchesDifficulty && matchesCategory && matchesSearch;
+});
   // ── Load all data once user identity is known ───────────────────────────────
   // FIX: guard against user===null so we don't load guest data and then
   //      immediately overwrite it with real-user data, causing a flash.
@@ -650,7 +697,7 @@ const comprehensionImprovement =
         {showTextMenu && (
           <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', padding: '2rem', borderRadius: '16px', marginBottom: '2rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-              <h3 style={{ margin: 0, color: highlightColor }}>Your Reading Texts</h3>
+              <h3 style={{ margin: 0, color: highlightColor }}>📚 Reading Library</h3>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button onClick={exportTexts} style={{ padding: '0.5rem 1rem', backgroundColor: 'rgba(255,255,255,0.1)', color: textColor, border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <Download size={16} /> Export
@@ -660,16 +707,16 @@ const comprehensionImprovement =
                   <input type="file" accept=".json" onChange={importTexts} style={{ display: 'none' }} />
                 </label>
                 <button onClick={() => setShowAddText((s) => !s)} style={{ padding: '0.5rem 1rem', backgroundColor: highlightColor, color: backgroundColor, border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 'bold' }}>
-                  <Plus size={16} /> Add New
+                  <Plus size={16} /> Add New Passage
                 </button>
               </div>
             </div>
 
             {showAddText && (
               <div style={{ backgroundColor: 'rgba(255,255,255,0.05)', padding: '1.5rem', borderRadius: '12px', marginBottom: '1.5rem' }}>
-                <h4 style={{ marginTop: 0, marginBottom: '1rem' }}>Add New Text</h4>
-                <input type="text" placeholder="Text title..." value={newTextTitle} onChange={(e) => setNewTextTitle(e.target.value)} style={{ width: '100%', padding: '0.75rem', marginBottom: '1rem', backgroundColor: 'rgba(255,255,255,0.05)', color: textColor, border: '2px solid rgba(255,255,255,0.1)', borderRadius: '6px', fontSize: '1rem', boxSizing: 'border-box' }} />
-                <textarea placeholder="Paste or type your text here..." value={newTextContent} onChange={(e) => setNewTextContent(e.target.value)} style={{ width: '100%', minHeight: '100px', padding: '0.75rem', marginBottom: '1rem', backgroundColor: 'rgba(255,255,255,0.05)', color: textColor, border: '2px solid rgba(255,255,255,0.1)', borderRadius: '6px', fontSize: '1rem', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }} />
+                <h4 style={{ marginTop: 0, marginBottom: '1rem' }}>Add New Reading Passage</h4>
+                <input type="text" placeholder="Passage title..." value={newTextTitle} onChange={(e) => setNewTextTitle(e.target.value)} style={{ width: '100%', padding: '0.75rem', marginBottom: '1rem', backgroundColor: 'rgba(255,255,255,0.05)', color: textColor, border: '2px solid rgba(255,255,255,0.1)', borderRadius: '6px', fontSize: '1rem', boxSizing: 'border-box' }} />
+                <textarea placeholder="Paste or type the reading passage here..." value={newTextContent} onChange={(e) => setNewTextContent(e.target.value)} style={{ width: '100%', minHeight: '100px', padding: '0.75rem', marginBottom: '1rem', backgroundColor: 'rgba(255,255,255,0.05)', color: textColor, border: '2px solid rgba(255,255,255,0.1)', borderRadius: '6px', fontSize: '1rem', fontFamily: 'inherit', resize: 'vertical', boxSizing: 'border-box' }} />
                 <div style={{ marginBottom: '1rem' }}>
                   <h5 style={{ marginBottom: '0.5rem' }}>Or Load from URL:</h5>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -685,45 +732,134 @@ const comprehensionImprovement =
                 </div>
               </div>
             )}
-            <div
-  style={{
-    display: 'flex',
-    gap: '0.5rem',
-    marginBottom: '1rem',
-    flexWrap: 'wrap'
-  }}
->
-  {["All", "Beginner", "Intermediate", "Advanced"].map((difficulty) => (
-    <button
-      key={difficulty}
-      onClick={() => setSelectedDifficulty(difficulty)}
-      style={{
-        padding: '0.5rem 1rem',
-        backgroundColor:
-          selectedDifficulty === difficulty
-            ? highlightColor
-            : 'rgba(255,255,255,0.1)',
-        color:
-          selectedDifficulty === difficulty
-            ? backgroundColor
-            : textColor,
-        border: 'none',
-        borderRadius: '6px',
-        cursor: 'pointer'
-      }}
-    >
-      {difficulty}
-    </button>
-  ))}
+            {/* Library Filters */}
+<div style={{
+  backgroundColor: 'rgba(255,255,255,0.04)',
+  padding: '1rem',
+  borderRadius: '12px',
+  marginBottom: '1.5rem'
+}}>
+  <h4 style={{ marginTop: 0, color: highlightColor }}>
+    Browse Reading Library
+  </h4>
+
+  <input
+    type="text"
+    placeholder="Search by title or category..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    style={{
+      width: '100%',
+      padding: '0.75rem',
+      marginBottom: '1rem',
+      backgroundColor: 'rgba(255,255,255,0.08)',
+      color: textColor,
+      border: 'none',
+      borderRadius: '8px',
+      fontSize: '1rem',
+      boxSizing: 'border-box'
+    }}
+  />
+
+  <div style={{ marginBottom: '1rem' }}>
+    <div style={{ fontSize: '0.85rem', opacity: 0.7, marginBottom: '0.5rem' }}>
+      Age Group
+    </div>
+    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      {ageBands.map((age) => (
+        <button
+          key={age}
+          onClick={() => setSelectedAgeBand(age)}
+          style={{
+            padding: '0.5rem 1rem',
+            backgroundColor: selectedAgeBand === age ? highlightColor : 'rgba(255,255,255,0.1)',
+            color: selectedAgeBand === age ? backgroundColor : textColor,
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer'
+          }}
+        >
+          {age}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div style={{ marginBottom: '1rem' }}>
+    <div style={{ fontSize: '0.85rem', opacity: 0.7, marginBottom: '0.5rem' }}>
+      Difficulty
+    </div>
+    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      {["All", "Beginner", "Intermediate", "Advanced"].map((difficulty) => (
+        <button
+          key={difficulty}
+          onClick={() => setSelectedDifficulty(difficulty)}
+          style={{
+            padding: '0.5rem 1rem',
+            backgroundColor: selectedDifficulty === difficulty ? highlightColor : 'rgba(255,255,255,0.1)',
+            color: selectedDifficulty === difficulty ? backgroundColor : textColor,
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer'
+          }}
+        >
+          {difficulty}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div>
+    <div style={{ fontSize: '0.85rem', opacity: 0.7, marginBottom: '0.5rem' }}>
+      Category
+    </div>
+    <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      {categories.map((category) => (
+        <button
+          key={category}
+          onClick={() => setSelectedCategory(category)}
+          style={{
+            padding: '0.5rem 1rem',
+            backgroundColor: selectedCategory === category ? highlightColor : 'rgba(255,255,255,0.1)',
+            color: selectedCategory === category ? backgroundColor : textColor,
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer'
+          }}
+        >
+          {category}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  <div style={{ marginTop: '1rem', fontSize: '0.85rem', opacity: 0.7 }}>
+    Showing {filteredTexts.length} passage(s)
+  </div>
 </div>
             <div style={{ display: 'grid', gap: '0.75rem' }}>
              {filteredTexts.map((text) => (
                 <div key={text.id} style={{ padding: '1rem', backgroundColor: currentTextId === text.id ? 'rgba(0,212,255,0.1)' : 'rgba(255,255,255,0.03)', border: currentTextId === text.id ? `2px solid ${highlightColor}` : '2px solid transparent', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'all 0.2s' }}
                   onClick={() => { setCurrentTextId(text.id); setCurrentWordIndex(0); setIsPlaying(false); }}>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 'bold', marginBottom: '0.25rem' }}>{text.title}</div>
-                    <div style={{ fontSize: '0.875rem', opacity: 0.7 }}>{text.wordCount || text.content.split(' ').filter((w) => w.length > 0).length} words · {text.difficulty} · {text.gradeBand} · Age {text.ageBand} · {text.category}</div>
-                  </div>
+  <div style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '1.05rem' }}>
+    🌟 {text.title}
+  </div>
+
+  <div style={{
+    display: 'flex',
+    gap: '0.5rem',
+    flexWrap: 'wrap',
+    fontSize: '0.85rem',
+    opacity: 0.8
+  }}>
+    <span>📖 {text.wordCount || text.content.split(' ').filter((w) => w.length > 0).length} words</span>
+    <span>📈 {text.difficulty}</span>
+    <span>🎓 {text.gradeBand}</span>
+    <span>👥 Ages {getLibraryAgeGroup(text.ageBand)}</span>
+    <span>🏷 {text.category}</span>
+  </div>
+</div>
                   <button onClick={(e) => { e.stopPropagation(); if (window.confirm(`Delete "${text.title}"?`)) deleteText(text.id); }} style={{ padding: '0.5rem', backgroundColor: 'rgba(255,0,0,0.2)', color: '#ff6b6b', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
                     <Trash2 size={16} />
                   </button>
