@@ -838,105 +838,81 @@ const comprehensionImprovement =
   </div>
 </div>
             <div style={{ display: 'grid', gap: '0.75rem' }}>
-             {filteredTexts.map((text) => (
-                <div key={text.id} style={{ padding: '1rem', backgroundColor: currentTextId === text.id ? 'rgba(0,212,255,0.1)' : 'rgba(255,255,255,0.03)', border: currentTextId === text.id ? `2px solid ${highlightColor}` : '2px solid transparent', borderRadius: '8px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'all 0.2s' }}
-                  onClick={() => { setCurrentTextId(text.id); setCurrentWordIndex(0); setIsPlaying(false); }}>
-                  <div style={{ flex: 1 }}>
-  <div style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '1.05rem' }}>
-    🌟 {text.title}
-  </div>
-
-  <div style={{
-    display: 'flex',
-    gap: '0.5rem',
-    flexWrap: 'wrap',
-    fontSize: '0.85rem',
-    opacity: 0.8
-  }}>
-    <span>📖 {text.wordCount || text.content.split(' ').filter((w) => w.length > 0).length} words</span>
-    <span>📈 {text.difficulty}</span>
-    <span>🎓 {text.gradeBand}</span>
-    <span>👥 Ages {getLibraryAgeGroup(text.ageBand)}</span>
-    <span>🏷 {text.category}</span>
-  </div>
-</div><div style={{ display: 'grid', gap: '0.75rem' }}>
-  {filteredTexts.length === 0 ? (
-    <div style={{
-      padding: '1rem',
-      backgroundColor: 'rgba(255,255,255,0.04)',
-      borderRadius: '10px',
-      opacity: 0.75
-    }}>
-      No passages match the selected filters.
-    </div>
-  ) : (
-    filteredTexts.map((text) => (
-      <div
-        key={text.id}
-        style={{
-          padding: '1rem',
-          backgroundColor: currentTextId === text.id ? 'rgba(0,212,255,0.1)' : 'rgba(255,255,255,0.03)',
-          border: currentTextId === text.id ? `2px solid ${highlightColor}` : '2px solid transparent',
-          borderRadius: '8px',
-          cursor: 'pointer',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          transition: 'all 0.2s'
-        }}
-        onClick={() => {
-          setCurrentTextId(text.id);
-          setCurrentWordIndex(0);
-          setIsPlaying(false);
-        }}
-      >
-        <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '1.05rem' }}>
-            🌟 {text.title}
-          </div>
-
-          <div style={{
-            display: 'flex',
-            gap: '0.5rem',
-            flexWrap: 'wrap',
-            fontSize: '0.85rem',
-            opacity: 0.8
-          }}>
-            <span>📖 {text.wordCount || text.content.split(' ').filter((w) => w.length > 0).length} words</span>
-            <span>📈 {text.difficulty}</span>
-            <span>🎓 {text.gradeBand}</span>
-            <span>👥 Ages {getLibraryAgeGroup(text.ageBand)}</span>
-            <span>🏷 {text.category}</span>
-          </div>
-        </div>
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            if (window.confirm(`Delete "${text.title}"?`)) deleteText(text.id);
-          }}
-          style={{
-            padding: '0.5rem',
-            backgroundColor: 'rgba(255,0,0,0.2)',
-            color: '#ff6b6b',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center'
-          }}
-        >
-          <Trash2 size={16} />
-        </button>
-      </div>
-    ))
-  )}
-</div>
-                  <button onClick={(e) => { e.stopPropagation(); if (window.confirm(`Delete "${text.title}"?`)) deleteText(text.id); }} style={{ padding: '0.5rem', backgroundColor: 'rgba(255,0,0,0.2)', color: '#ff6b6b', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-                    <Trash2 size={16} />
-                  </button>
+              {filteredTexts.length === 0 ? (
+                <div
+                  style={{
+                    padding: '1rem',
+                    backgroundColor: 'rgba(255,255,255,0.04)',
+                    borderRadius: '10px',
+                    opacity: 0.75
+                  }}
+                >
+                  No passages match the selected filters.
                 </div>
-              ))}
+              ) : (
+                filteredTexts.map((text) => (
+                  <div
+                    key={text.id}
+                    style={{
+                      padding: '1rem',
+                      backgroundColor: currentTextId === text.id ? 'rgba(0,212,255,0.1)' : 'rgba(255,255,255,0.03)',
+                      border: currentTextId === text.id ? `2px solid ${highlightColor}` : '2px solid transparent',
+                      borderRadius: '8px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      transition: 'all 0.2s'
+                    }}
+                    onClick={() => {
+                      setCurrentTextId(text.id);
+                      setCurrentWordIndex(0);
+                      setIsPlaying(false);
+                    }}
+                  >
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontWeight: 'bold', marginBottom: '0.5rem', fontSize: '1.05rem' }}>
+                        🌟 {text.title}
+                      </div>
+
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '0.5rem',
+                          flexWrap: 'wrap',
+                          fontSize: '0.85rem',
+                          opacity: 0.8
+                        }}
+                      >
+                        <span>📖 {text.wordCount || text.content.split(' ').filter((w) => w.length > 0).length} words</span>
+                        <span>📈 {text.difficulty}</span>
+                        <span>🎓 {text.gradeBand}</span>
+                        <span>👥 Ages {getLibraryAgeGroup(text.ageBand)}</span>
+                        <span>🏷 {text.category}</span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (window.confirm(`Delete "${text.title}"?`)) deleteText(text.id);
+                      }}
+                      style={{
+                        padding: '0.5rem',
+                        backgroundColor: 'rgba(255,0,0,0.2)',
+                        color: '#ff6b6b',
+                        border: 'none',
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                    >
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
